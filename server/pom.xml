@@ -8,14 +8,7 @@
         <version>0.0.1-SNAPSHOT</version>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>explore-with-me-stats</artifactId>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>common</module>
-        <module>server</module>
-        <module>client</module>
-    </modules>
+    <artifactId>explore-with-me-server</artifactId>
 
     <properties>
         <maven.compiler.source>11</maven.compiler.source>

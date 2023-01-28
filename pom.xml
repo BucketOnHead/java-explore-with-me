@@ -18,6 +18,7 @@
 
     <modules>
         <module>stats</module>
+        <module>server</module>
     </modules>
 
     <properties>

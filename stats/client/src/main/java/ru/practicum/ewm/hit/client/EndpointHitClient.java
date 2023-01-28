@@ -1,5 +1,6 @@
 package ru.practicum.ewm.hit.client;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.reactive.function.client.WebClient;
 import ru.practicum.ewm.hit.dto.request.AddEndpointHitRequestDto;
 import ru.practicum.ewm.hit.dto.response.EndpointHitResponseDto;
@@ -10,7 +11,7 @@ import java.util.List;
 public class EndpointHitClient {
     private final WebClient webClient;
 
-    public EndpointHitClient(String serverUrl) {
+    public EndpointHitClient(@Value("${stats-server.url}") String serverUrl) {
         this.webClient = WebClient.create(serverUrl);
     }
 
@@ -23,12 +24,8 @@ public class EndpointHitClient {
                 .block();
     }
 
-    public List<ViewStatsResponseDto> getStats(String start,
-                                               String end,
-                                               List<String> uris,
-                                               Boolean unique,
-                                               Integer from,
-                                               Integer size) {
+    public List<ViewStatsResponseDto> getStats(String start, String end, List<String> uris,
+                                               Boolean unique, Integer from, Integer size) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
                         .queryParam("start", start)
