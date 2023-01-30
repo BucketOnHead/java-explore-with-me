@@ -25,7 +25,7 @@ services:
       - POSTGRES_PASSWORD=password
 
   ewm-service:
-    build: ./server
+    build: ./main/server
     image: ewm-service
     container_name: ewm-service
     depends_on:
