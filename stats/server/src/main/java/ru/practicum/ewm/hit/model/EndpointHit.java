@@ -21,7 +21,7 @@ public class EndpointHit {
     @Column(length = 50, nullable = false)
     private String app;
 
-    @Column(nullable = false)
+    @Column(length = 250, nullable = false)
     private String uri;
 
     @Column(length = 50, nullable = false)
