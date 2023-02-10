@@ -8,7 +8,7 @@ import ru.practicum.ewm.entity.event.dto.request.UpdateEventAdminRequestDto;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.entity.Event;
 import ru.practicum.ewm.entity.event.logging.EventControllerLoggerHelper;
-import ru.practicum.ewm.entity.event.service.EventAdminService;
+import ru.practicum.ewm.entity.event.service.contoller.EventAdminService;
 
 import javax.validation.Valid;
 import javax.validation.constraints.Positive;

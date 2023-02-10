@@ -3,6 +3,7 @@ package ru.practicum.ewm.hit.repository;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import ru.practicum.ewm.hit.model.EndpointHit;
 import ru.practicum.ewm.hit.model.stats.ViewStats;
@@ -23,14 +24,19 @@ public interface EndpointHitJpaRepository extends JpaRepository<EndpointHit, Lon
             + "FROM "
             + "  EndpointHit AS hits "
             + "WHERE "
-            + "  (?3 IS NULL) OR (hits.uri IN ?3) "
+            + "    (((:uris) IS NULL) OR (hits.uri IN (:uris))) "
             + "  AND "
-            + "  hits.timestamp BETWEEN ?1 AND ?2 "
+            + "    ((CAST(:start AS date) IS NULL) OR (hits.timestamp >= :start)) "
+            + "  AND "
+            + "    ((CAST(:end AS date) IS NULL) OR (hits.timestamp <= :end)) "
             + "GROUP BY "
             + "  hits.app, "
             + "  hits.uri ")
     List<ViewStats> collectEndpointHitStats(
-            LocalDateTime start, LocalDateTime end, List<String> uris, Sort sort);
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("uris") List<String> uris,
+            Sort sort);
 
     @Query(value = ""
             + "SELECT "
@@ -42,11 +48,17 @@ public interface EndpointHitJpaRepository extends JpaRepository<EndpointHit, Lon
             + "FROM "
             + "  EndpointHit AS hits "
             + "WHERE "
-            + "  ?3 IS NULL "
-            + "  OR hits.uri IN ?3 "
-            + "  AND hits.timestamp BETWEEN ?1 AND ?2 "
+            + "    (((:uris) IS NULL) OR (hits.uri IN (:uris))) "
+            + "  AND "
+            + "    ((CAST(:start AS date) IS NULL) OR (hits.timestamp >= :start)) "
+            + "  AND "
+            + "    ((CAST(:end AS date) IS NULL) OR (hits.timestamp <= :end)) "
             + "GROUP BY "
             + "  hits.app, "
             + "  hits.uri ")
-    List<ViewStats> collectUniqueEndpointStats(LocalDateTime start, LocalDateTime end, List<String> uris, Sort sort);
+    List<ViewStats> collectUniqueEndpointStats(
+            @Param("start") LocalDateTime start,
+            @Param("end") LocalDateTime end,
+            @Param("uris") List<String> uris,
+            Sort sort);
 }

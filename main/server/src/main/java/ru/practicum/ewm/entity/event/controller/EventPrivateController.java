@@ -10,7 +10,7 @@ import ru.practicum.ewm.entity.event.dto.request.UpdateEventUserRequestDto;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventShortResponseDto;
 import ru.practicum.ewm.entity.event.logging.EventControllerLoggerHelper;
-import ru.practicum.ewm.entity.event.service.EventPrivateService;
+import ru.practicum.ewm.entity.event.service.contoller.EventPrivateService;
 import ru.practicum.ewm.entity.participation.dto.request.UpdateEventParticipationStatusRequestDto;
 import ru.practicum.ewm.entity.event.dto.response.EventRequestsByStatusResponseDto;
 import ru.practicum.ewm.entity.participation.dto.response.ParticipationResponseDto;

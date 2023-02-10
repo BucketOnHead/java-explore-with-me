@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Getter
@@ -16,16 +17,15 @@ public class AddEndpointHitRequestDto {
     private LocalDateTime timestamp;
 
     public static AddEndpointHitRequestDto toAddEndpointHitRequestDto(
+            HttpServletRequest request,
             String app,
-            String uri,
-            String ip,
             LocalDateTime timestamp
     ) {
         AddEndpointHitRequestDto endpointHitDto = new AddEndpointHitRequestDto();
 
         endpointHitDto.setApp(app);
-        endpointHitDto.setUri(uri);
-        endpointHitDto.setIp(ip);
+        endpointHitDto.setUri(request.getRequestURI());
+        endpointHitDto.setIp(request.getRemoteAddr());
         endpointHitDto.setTimestamp(timestamp);
 
         return endpointHitDto;

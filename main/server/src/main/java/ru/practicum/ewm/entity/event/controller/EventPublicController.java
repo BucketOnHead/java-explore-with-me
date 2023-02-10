@@ -8,7 +8,7 @@ import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventShortResponseDto;
 import ru.practicum.ewm.entity.event.entity.Event;
 import ru.practicum.ewm.entity.event.logging.EventControllerLoggerHelper;
-import ru.practicum.ewm.entity.event.service.EventPublicService;
+import ru.practicum.ewm.entity.event.service.contoller.EventPublicService;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.constraints.Positive;

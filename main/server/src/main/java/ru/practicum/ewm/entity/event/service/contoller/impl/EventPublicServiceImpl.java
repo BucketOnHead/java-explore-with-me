@@ -1,4 +1,4 @@
-package ru.practicum.ewm.entity.event.service.impl;
+package ru.practicum.ewm.entity.event.service.contoller.impl;
 
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
@@ -13,8 +13,8 @@ import ru.practicum.ewm.entity.event.entity.Event;
 import ru.practicum.ewm.entity.event.logging.EventServiceLoggingHelper;
 import ru.practicum.ewm.entity.event.mapper.EventMapper;
 import ru.practicum.ewm.entity.event.repository.EventJpaRepository;
-import ru.practicum.ewm.entity.event.service.EventPublicService;
-import ru.practicum.ewm.entity.event.service.EventStatisticsService;
+import ru.practicum.ewm.entity.event.service.contoller.EventPublicService;
+import ru.practicum.ewm.entity.event.service.statistics.EventStatisticsService;
 import ru.practicum.ewm.entity.participation.entity.Participation;
 import ru.practicum.ewm.entity.participation.repository.ParticipationRequestJpaRepository;
 
@@ -40,8 +40,8 @@ public class EventPublicServiceImpl implements EventPublicService {
     public EventFullResponseDto getEventById(Long id, HttpServletRequest request) {
         eventRepository.checkEventExistsById(id);
         Event event = eventRepository.getReferenceById(id);
-        eventStatisticsService.addEventView(id, request.getRemoteAddr(), LocalDateTime.now());
-        EventFullResponseDto eventDto = getEventFullResponseDto(event);
+        eventStatisticsService.addEventView(request, LocalDateTime.now());
+        EventFullResponseDto eventDto = getEventFullResponseDto(event, request);
         EventServiceLoggingHelper.eventDtoReturned(log, eventDto);
         return eventDto;
     }
@@ -73,7 +73,8 @@ public class EventPublicServiceImpl implements EventPublicService {
             events = getOnlyAvailableEvents(events);
         }
 
-        eventStatisticsService.addEventViews(events, request.getRemoteAddr(), LocalDateTime.now());
+        eventStatisticsService.addEventView(request, LocalDateTime.now());
+
         List<EventShortResponseDto> eventDtos = EventMapper.toShortResponseDto(
                 events,
                 eventStatisticsService.getEventViews(events, false),
@@ -96,7 +97,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         switch (sort) {
             case EVENT_DATE:
                 sortedEventDtos = StreamSupport.stream(eventDtos.spliterator(), false)
-                        .sorted(Comparator.comparing(EventShortResponseDto::getId).reversed())
+                        .sorted(Comparator.comparing(EventShortResponseDto::getEventDate).reversed())
                         .collect(Collectors.toList());
                 break;
             case VIEWS:
@@ -123,10 +124,15 @@ public class EventPublicServiceImpl implements EventPublicService {
         return availableEvents;
     }
 
-    private EventFullResponseDto getEventFullResponseDto(Event event) {
-        return EventMapper.toEventFullResponseDto(
-                event,
-                eventStatisticsService.getEventViews(event, false),
-                requestRepository.getEventRequestCount(event.getId(), Participation.Status.CONFIRMED));
+    private EventFullResponseDto getEventFullResponseDto(Event event, HttpServletRequest request) {
+        return EventMapper.toEventFullResponseDto(event,
+                eventStatisticsService.getEventViews(
+                        LocalDateTime.from(event.getEventDate()).minusYears(1L),
+                        LocalDateTime.from(event.getEventDate()),
+                        null,
+                        request),
+                requestRepository.getEventRequestCount(
+                        event.getId(),
+                        Participation.Status.CONFIRMED));
     }
 }

@@ -39,14 +39,24 @@ public class EndpointHitServiceImpl implements EndpointHitService {
 
     @Override
     public List<ViewStatsResponseDto> getStats(
-            LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique) {
+            LocalDateTime start,
+            LocalDateTime end,
+            List<String> uris,
+            Boolean unique
+    ) {
         List<ViewStats> endpointHitsStats;
         if (unique == Boolean.TRUE) {
             endpointHitsStats = endpointHitRepository.collectUniqueEndpointStats(
-                    start, end, uris, JpaSort.unsafe("COUNT(DISTINCT hits.ip)").descending());
+                    start,
+                    end,
+                    uris,
+                    JpaSort.unsafe("COUNT(DISTINCT hits.ip)").descending());
         } else {
             endpointHitsStats = endpointHitRepository.collectEndpointHitStats(
-                    start, end, uris, JpaSort.unsafe("COUNT(hits.ip)").descending());
+                    start,
+                    end,
+                    uris,
+                    JpaSort.unsafe("COUNT(hits.ip)").descending());
         }
 
         List<ViewStatsResponseDto> endpointHitsStatsDto = ViewStatsMapper.toViewStatsResponseDto(endpointHitsStats);

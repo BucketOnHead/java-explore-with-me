@@ -1,4 +1,4 @@
-package ru.practicum.ewm.entity.event.service.impl;
+package ru.practicum.ewm.entity.event.service.contoller.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +17,7 @@ import ru.practicum.ewm.entity.event.entity.Event;
 import ru.practicum.ewm.entity.event.logging.EventServiceLoggingHelper;
 import ru.practicum.ewm.entity.event.mapper.EventMapper;
 import ru.practicum.ewm.entity.event.repository.EventJpaRepository;
-import ru.practicum.ewm.entity.event.service.EventPrivateService;
+import ru.practicum.ewm.entity.event.service.contoller.EventPrivateService;
 import ru.practicum.ewm.entity.event.validation.validator.EventValidator;
 import ru.practicum.ewm.entity.participation.dto.request.UpdateEventParticipationStatusRequestDto;
 import ru.practicum.ewm.entity.participation.dto.response.ParticipationResponseDto;

@@ -1,4 +1,4 @@
-package ru.practicum.ewm.entity.event.service;
+package ru.practicum.ewm.entity.event.service.contoller;
 
 import ru.practicum.ewm.entity.event.dto.request.AddEventRequestDto;
 import ru.practicum.ewm.entity.event.dto.request.UpdateEventUserRequestDto;

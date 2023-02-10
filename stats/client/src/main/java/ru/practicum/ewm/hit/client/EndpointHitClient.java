@@ -7,10 +7,14 @@ import ru.practicum.ewm.hit.dto.request.AddEndpointHitRequestDto;
 import ru.practicum.ewm.hit.dto.response.EndpointHitResponseDto;
 import ru.practicum.ewm.hit.dto.response.stats.ViewStatsResponseDto;
 
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
 public class EndpointHitClient {
     private final WebClient webClient;
+    private final DateTimeFormatter dateTimeFormat =
+            DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     public EndpointHitClient(String serverUrl) {
         this.webClient = WebClient.create(serverUrl);
@@ -26,11 +30,16 @@ public class EndpointHitClient {
                 .block();
     }
 
-    public List<ViewStatsResponseDto> getStats(String start, String end, List<String> uris, Boolean unique) {
+    public List<ViewStatsResponseDto> getStats(
+            LocalDateTime start,
+            LocalDateTime end,
+            List<String> uris,
+            Boolean unique
+    ) {
         return webClient.get()
                 .uri(uriBuilder -> uriBuilder.path("/stats")
-                        .queryParam("start", start)
-                        .queryParam("end", end)
+                        .queryParam("start", start.format(dateTimeFormat))
+                        .queryParam("end", end.format(dateTimeFormat))
                         .queryParam("uris", uris)
                         .queryParam("unique", unique)
                         .build())

@@ -2,7 +2,6 @@ package ru.practicum.ewm.hit.controller;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.hit.dto.request.AddEndpointHitRequestDto;
@@ -13,8 +12,6 @@ import ru.practicum.ewm.hit.service.EndpointHitService;
 import java.time.LocalDateTime;
 import java.util.List;
 
-import static org.springframework.format.annotation.DateTimeFormat.*;
-
 @RestController
 @Slf4j
 @RequiredArgsConstructor
@@ -23,7 +20,9 @@ public class EndpointHitController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public EndpointHitResponseDto addEndpointHit(@RequestBody AddEndpointHitRequestDto endpointHitDto) {
+    public EndpointHitResponseDto addEndpointHit(
+            @RequestBody AddEndpointHitRequestDto endpointHitDto
+    ) {
         log.info("add ENDPOINT_HIT[uri='{}', ip={}, timestamp={}].",
                 endpointHitDto.getUri(),
                 endpointHitDto.getIp(),
@@ -34,14 +33,13 @@ public class EndpointHitController {
 
     @GetMapping("/stats")
     public List<ViewStatsResponseDto> getStats(
-            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = ISO.DATE_TIME) LocalDateTime end,
+            @RequestParam LocalDateTime start,
+            @RequestParam LocalDateTime end,
             @RequestParam(required = false) List<String> uris,
             @RequestParam(defaultValue = "false") Boolean unique) {
         log.info("get VIEW_STATS[uri_count={}, unique_ip={}].",
                 (uris != null) ? uris.size() : "ALL",
                 unique);
-
         return endpointHitService.getStats(start, end, uris, unique);
     }
 }
