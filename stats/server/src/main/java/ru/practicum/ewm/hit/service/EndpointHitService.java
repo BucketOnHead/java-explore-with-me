@@ -10,10 +10,5 @@ import java.util.List;
 public interface EndpointHitService {
     EndpointHitResponseDto addEndpointHit(AddEndpointHitRequestDto endpointHitDto);
 
-    List<ViewStatsResponseDto> getStats(LocalDateTime start,
-                                        LocalDateTime end,
-                                        List<String> uris,
-                                        Boolean unique,
-                                        Integer from,
-                                        Integer size);
+    List<ViewStatsResponseDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris, Boolean unique);
 }

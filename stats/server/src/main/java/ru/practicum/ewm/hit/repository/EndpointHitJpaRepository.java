@@ -1,6 +1,6 @@
 package ru.practicum.ewm.hit.repository;
 
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -23,17 +23,14 @@ public interface EndpointHitJpaRepository extends JpaRepository<EndpointHit, Lon
             + "FROM "
             + "  EndpointHit AS hits "
             + "WHERE "
-            + "  ?3 IS NULL "
-            + "  OR hits.uri IN ?3 "
-            + "  AND hits.timestamp BETWEEN ?1 AND ?2 "
+            + "  (?3 IS NULL) OR (hits.uri IN ?3) "
+            + "  AND "
+            + "  hits.timestamp BETWEEN ?1 AND ?2 "
             + "GROUP BY "
             + "  hits.app, "
             + "  hits.uri ")
     List<ViewStats> collectEndpointHitStats(
-            LocalDateTime start,
-            LocalDateTime end,
-            List<String> uris,
-            Pageable pageable);
+            LocalDateTime start, LocalDateTime end, List<String> uris, Sort sort);
 
     @Query(value = ""
             + "SELECT "
@@ -51,9 +48,5 @@ public interface EndpointHitJpaRepository extends JpaRepository<EndpointHit, Lon
             + "GROUP BY "
             + "  hits.app, "
             + "  hits.uri ")
-    List<ViewStats> collectUniqueEndpointStats(
-            LocalDateTime start,
-            LocalDateTime end,
-            List<String> uris,
-            Pageable pageable);
+    List<ViewStats> collectUniqueEndpointStats(LocalDateTime start, LocalDateTime end, List<String> uris, Sort sort);
 }

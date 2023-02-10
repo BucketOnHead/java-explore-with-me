@@ -1,4 +1,4 @@
-package ru.practicum.ewm.hit.config;
+package ru.practicum.ewm.config;
 
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateDeserializer;
 import com.fasterxml.jackson.datatype.jsr310.deser.LocalDateTimeDeserializer;
@@ -18,12 +18,14 @@ import java.time.format.DateTimeFormatter;
 
 @Configuration
 @PropertySource("classpath:datetime.properties")
-public class DateTimeConfig implements WebMvcConfigurer {
+public class DateTimeFormatConfig implements WebMvcConfigurer {
     private final String dateFormat;
     private final String dateTimeFormat;
 
-    public DateTimeConfig(@Value("${default-date-format}") String dateFormat,
-                          @Value("${default-date-time-format}") String dateTimeFormat) {
+    public DateTimeFormatConfig(
+            @Value("${default-date-format}") String dateFormat,
+            @Value("${default-date-time-format}") String dateTimeFormat
+    ) {
         this.dateFormat = dateFormat;
         this.dateTimeFormat = dateTimeFormat;
     }
