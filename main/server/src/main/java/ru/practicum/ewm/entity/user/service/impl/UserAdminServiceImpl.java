@@ -10,7 +10,7 @@ import ru.practicum.ewm.entity.user.dto.response.UserResponseDto;
 import ru.practicum.ewm.entity.user.entity.User;
 import ru.practicum.ewm.entity.user.logging.UserServiceLoggerHelper;
 import ru.practicum.ewm.entity.user.mapper.UserMapper;
-import ru.practicum.ewm.entity.user.repositoey.UserJpaRepository;
+import ru.practicum.ewm.entity.user.repository.UserJpaRepository;
 import ru.practicum.ewm.entity.user.service.UserAdminService;
 
 import java.util.List;

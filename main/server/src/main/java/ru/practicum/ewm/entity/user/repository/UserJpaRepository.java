@@ -1,4 +1,4 @@
-package ru.practicum.ewm.entity.user.repositoey;
+package ru.practicum.ewm.entity.user.repository;
 
 import lombok.NonNull;
 import org.springframework.data.jpa.repository.JpaRepository;

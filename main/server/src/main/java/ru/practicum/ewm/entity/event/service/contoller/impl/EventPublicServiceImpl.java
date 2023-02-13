@@ -16,14 +16,11 @@ import ru.practicum.ewm.entity.event.repository.EventJpaRepository;
 import ru.practicum.ewm.entity.event.service.contoller.EventPublicService;
 import ru.practicum.ewm.entity.event.service.statistics.EventStatisticsService;
 import ru.practicum.ewm.entity.participation.entity.Participation;
-import ru.practicum.ewm.entity.participation.repository.ParticipationRequestJpaRepository;
+import ru.practicum.ewm.entity.participation.repository.jpa.ParticipationRequestJpaRepository;
 
 import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
 
@@ -78,7 +75,7 @@ public class EventPublicServiceImpl implements EventPublicService {
         List<EventShortResponseDto> eventDtos = EventMapper.toShortResponseDto(
                 events,
                 eventStatisticsService.getEventViews(events, false),
-                requestRepository.getEventRequestCount(events, Participation.Status.CONFIRMED));
+                requestRepository.getEventRequestsCount(events, Participation.Status.CONFIRMED));
 
         if (sort != null) {
             eventDtos = sortEvents(sort, eventDtos);
@@ -113,11 +110,12 @@ public class EventPublicServiceImpl implements EventPublicService {
 
     private List<Event> getOnlyAvailableEvents(Iterable<Event> events) {
         List<Event> availableEvents = new ArrayList<>();
-        for (Event event : events) {
-            Integer confirmedRequests = requestRepository.getEventRequestCount(
-                    event.getId(), Participation.Status.CONFIRMED);
 
-            if (confirmedRequests < event.getParticipantLimit()) {
+        Map<Long, Integer> confirmedRequestsByEventId =
+                requestRepository.getEventRequestsCount(events, Participation.Status.CONFIRMED);
+
+        for (Event event : events) {
+            if (confirmedRequestsByEventId.get(event.getId()) < event.getParticipantLimit()) {
                 availableEvents.add(event);
             }
         }
@@ -131,7 +129,7 @@ public class EventPublicServiceImpl implements EventPublicService {
                         LocalDateTime.from(event.getEventDate()),
                         null,
                         request),
-                requestRepository.getEventRequestCount(
+                requestRepository.getEventRequestsCount(
                         event.getId(),
                         Participation.Status.CONFIRMED));
     }

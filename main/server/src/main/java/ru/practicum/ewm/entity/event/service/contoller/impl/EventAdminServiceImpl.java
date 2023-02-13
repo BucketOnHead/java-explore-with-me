@@ -18,7 +18,7 @@ import ru.practicum.ewm.entity.event.service.contoller.EventAdminService;
 import ru.practicum.ewm.entity.event.service.statistics.EventStatisticsService;
 import ru.practicum.ewm.entity.event.validation.validator.EventValidator;
 import ru.practicum.ewm.entity.participation.entity.Participation;
-import ru.practicum.ewm.entity.participation.repository.ParticipationRequestJpaRepository;
+import ru.practicum.ewm.entity.participation.repository.jpa.ParticipationRequestJpaRepository;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
@@ -57,7 +57,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         List<EventFullResponseDto> eventDtos = EventMapper.toEventFullResponseDto(
                 events,
                 eventStatisticsService.getEventViews(events, false),
-                requestRepository.getEventRequestCount(events, Participation.Status.CONFIRMED));
+                requestRepository.getEventRequestsCount(events, Participation.Status.CONFIRMED));
         eventDtos.sort(Comparator.comparing(EventFullResponseDto::getId).reversed());
         EventServiceLoggingHelper.eventDtoPageByAdminParametersReturned(log, from, size, eventDtos);
         return eventDtos;

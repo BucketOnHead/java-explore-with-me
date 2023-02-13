@@ -10,11 +10,11 @@ import ru.practicum.ewm.entity.participation.dto.response.ParticipationResponseD
 import ru.practicum.ewm.entity.participation.entity.Participation;
 import ru.practicum.ewm.entity.participation.logging.ParticipationServiceLoggingHelper;
 import ru.practicum.ewm.entity.participation.mapper.ParticipationMapper;
-import ru.practicum.ewm.entity.participation.repository.ParticipationRequestJpaRepository;
+import ru.practicum.ewm.entity.participation.repository.jpa.ParticipationRequestJpaRepository;
 import ru.practicum.ewm.entity.participation.service.ParticipationPrivateService;
 import ru.practicum.ewm.entity.participation.validation.validator.ParticipationValidator;
 import ru.practicum.ewm.entity.user.entity.User;
-import ru.practicum.ewm.entity.user.repositoey.UserJpaRepository;
+import ru.practicum.ewm.entity.user.repository.UserJpaRepository;
 import ru.practicum.ewm.exception.ConflictException;
 
 import java.util.List;
@@ -91,7 +91,7 @@ public class ParticipationPrivateServiceImpl implements ParticipationPrivateServ
     private void checkRequest(Long userId, Long eventId) {
         User requester = userRepository.getReferenceById(userId);
         Event event = eventRepository.getReferenceById(eventId);
-        Integer confirmedRequests = requestRepository.getEventRequestCount(eventId, Participation.Status.CONFIRMED);
+        Integer confirmedRequests = requestRepository.getEventRequestsCount(eventId, Participation.Status.CONFIRMED);
 
         ParticipationValidator.validateRequesterIsNotInitiator(requester.getId(), event.getInitiator().getId());
         ParticipationValidator.validateEventPublished(event.getState());

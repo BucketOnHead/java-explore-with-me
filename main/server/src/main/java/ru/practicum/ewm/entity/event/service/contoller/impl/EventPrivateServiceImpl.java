@@ -23,10 +23,10 @@ import ru.practicum.ewm.entity.participation.dto.request.UpdateEventParticipatio
 import ru.practicum.ewm.entity.participation.dto.response.ParticipationResponseDto;
 import ru.practicum.ewm.entity.participation.entity.Participation;
 import ru.practicum.ewm.entity.participation.mapper.ParticipationMapper;
-import ru.practicum.ewm.entity.participation.repository.ParticipationRequestJpaRepository;
+import ru.practicum.ewm.entity.participation.repository.jpa.ParticipationRequestJpaRepository;
 import ru.practicum.ewm.entity.participation.validation.validator.ParticipationValidator;
 import ru.practicum.ewm.entity.user.entity.User;
-import ru.practicum.ewm.entity.user.repositoey.UserJpaRepository;
+import ru.practicum.ewm.entity.user.repository.UserJpaRepository;
 
 import java.util.List;
 import java.util.Optional;
@@ -172,7 +172,7 @@ public class EventPrivateServiceImpl implements EventPrivateService {
     ) {
         Event event = eventRepository.getReferenceById(eventId);
         int limit = event.getParticipantLimit();
-        int confirmedRequests = requestRepository.getEventRequestCount(event.getId(), Participation.Status.CONFIRMED);
+        int confirmedRequests = requestRepository.getEventRequestsCount(event.getId(), Participation.Status.CONFIRMED);
 
         ParticipationValidator.validateLimitNotExceeded(1, confirmedRequests, limit);
 
