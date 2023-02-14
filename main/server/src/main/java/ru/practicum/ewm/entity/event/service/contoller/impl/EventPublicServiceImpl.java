@@ -9,10 +9,14 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventShortResponseDto;
+import ru.practicum.ewm.entity.event.dto.response.comment.CommentResponseDto;
 import ru.practicum.ewm.entity.event.entity.Event;
-import ru.practicum.ewm.entity.event.logging.EventServiceLoggingHelper;
+import ru.practicum.ewm.entity.event.entity.comment.Comment;
+import ru.practicum.ewm.entity.event.logging.EventServiceLoggerHelper;
 import ru.practicum.ewm.entity.event.mapper.EventMapper;
+import ru.practicum.ewm.entity.event.mapper.comment.CommentMapper;
 import ru.practicum.ewm.entity.event.repository.EventJpaRepository;
+import ru.practicum.ewm.entity.event.repository.comment.CommentJpaRepository;
 import ru.practicum.ewm.entity.event.service.contoller.EventPublicService;
 import ru.practicum.ewm.entity.event.service.statistics.EventStatisticsService;
 import ru.practicum.ewm.entity.participation.entity.Participation;
@@ -28,10 +32,12 @@ import java.util.stream.StreamSupport;
 @Transactional(readOnly = true)
 @Slf4j
 @RequiredArgsConstructor
+@SuppressWarnings("java:S1200")
 public class EventPublicServiceImpl implements EventPublicService {
+    private final EventStatisticsService eventStatisticsService;
     private final EventJpaRepository eventRepository;
     private final ParticipationRequestJpaRepository requestRepository;
-    private final EventStatisticsService eventStatisticsService;
+    private final CommentJpaRepository commentRepository;
 
     @Override
     public EventFullResponseDto getEventById(Long id, HttpServletRequest request) {
@@ -39,8 +45,18 @@ public class EventPublicServiceImpl implements EventPublicService {
         Event event = eventRepository.getReferenceById(id);
         eventStatisticsService.addEventView(request, LocalDateTime.now());
         EventFullResponseDto eventDto = getEventFullResponseDto(event, request);
-        EventServiceLoggingHelper.eventDtoReturned(log, eventDto);
+        EventServiceLoggerHelper.eventDtoReturned(log, eventDto);
         return eventDto;
+    }
+
+    @Override
+    public CommentResponseDto getCommentById(Long id, Long comId) {
+        eventRepository.checkEventExistsById(id);
+        commentRepository.checkCommentExistsById(comId);
+        Comment comment = commentRepository.getReferenceById(comId);
+        CommentResponseDto commentDto = CommentMapper.toCommentResponseDto(comment);
+        EventServiceLoggerHelper.commentDtoReturned(log, commentDto);
+        return commentDto;
     }
 
     @Override
@@ -81,8 +97,17 @@ public class EventPublicServiceImpl implements EventPublicService {
             eventDtos = sortEvents(sort, eventDtos);
         }
 
-        EventServiceLoggingHelper.eventDtoPageByUserParametersReturned(log, eventDtos, from, size, sort);
+        EventServiceLoggerHelper.eventDtoPageByUserParametersReturned(log, eventDtos, from, size, sort);
         return eventDtos;
+    }
+
+    @Override
+    public Iterable<CommentResponseDto> getComments(Long id, Integer from, Integer size) {
+        eventRepository.checkEventExistsById(id);
+        List<Comment> comments = commentRepository.findAllByEventId(id, PageRequest.of(from, size));
+        List<CommentResponseDto> commentDtos = CommentMapper.toCommentResponseDto(comments);
+        EventServiceLoggerHelper.commentDtoPageReturned(log, from, size, commentDtos);
+        return commentDtos;
     }
 
     @SuppressWarnings("java:S112")
