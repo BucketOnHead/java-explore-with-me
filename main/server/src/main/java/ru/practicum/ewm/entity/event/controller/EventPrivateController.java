@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.practicum.ewm.entity.event.dto.request.AddEventRequestDto;
 import ru.practicum.ewm.entity.event.dto.request.UpdateEventUserRequestDto;
 import ru.practicum.ewm.entity.event.dto.request.comment.AddCommentRequestDto;
+import ru.practicum.ewm.entity.event.dto.request.comment.UpdateCommentRequestDto;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventRequestsByStatusResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventShortResponseDto;
@@ -98,6 +99,17 @@ public class EventPrivateController {
     ) {
         EventControllerLoggerHelper.updateEventRequestStatus(log, userId, eventId, requestStatusDto);
         return privateEventService.updateEventParticipationRequestStatus(userId, eventId, requestStatusDto);
+    }
+
+    @PatchMapping("/{eventId}/comments/{comId}")
+    public CommentResponseDto updateCommentById(
+            @PathVariable Long userId,
+            @PathVariable Long eventId,
+            @PathVariable Long comId,
+            @RequestBody @Valid UpdateCommentRequestDto commentDto
+    ) {
+        EventControllerLoggerHelper.updateCommentById(log, userId, eventId, comId, commentDto);
+        return privateEventService.updateCommentById(userId, eventId, comId, commentDto);
     }
 
     @DeleteMapping("/{eventId}/comments/{comId}")

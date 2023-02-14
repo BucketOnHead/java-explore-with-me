@@ -207,6 +207,18 @@ public final class EventServiceLoggerHelper {
                 commentDtos.size());
     }
 
+    public static void commentUpdated(
+            Logger logger,
+            Comment comment
+    ) {
+        logger.debug("COMMENT["
+                        + "comment_id={}, "
+                        + "updated_text='{}'"
+                        + "] updated.",
+                comment.getId(),
+                comment.getText());
+    }
+
     public static void commentDeleted(
             Logger logger,
             Long comId,
