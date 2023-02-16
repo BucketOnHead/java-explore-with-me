@@ -18,7 +18,7 @@
 
     <modules>
         <module>stats</module>
-        <module>server</module>
+        <module>main</module>
     </modules>
 
     <properties>

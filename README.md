@@ -1,2 +1,2 @@
 # Архитектура проекта
-![project architecture](readme/project_architecture.png)
+![project architecture](./.readme/project_architecture.png)

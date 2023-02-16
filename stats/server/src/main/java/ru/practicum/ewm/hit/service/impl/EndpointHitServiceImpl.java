@@ -2,7 +2,6 @@ package ru.practicum.ewm.hit.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.jpa.domain.JpaSort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,24 +30,37 @@ public class EndpointHitServiceImpl implements EndpointHitService {
     public EndpointHitResponseDto addEndpointHit(AddEndpointHitRequestDto endpointHitDto) {
         EndpointHit endpointHit = EndpointHitMapper.toEndpointHit(endpointHitDto);
         EndpointHit savedEndpointHit = endpointHitRepository.save(endpointHit);
-        log.debug("ENDPOINT_HIT[ID={}] сохранён.", savedEndpointHit.getId());
+        log.debug("ENDPOINT_HIT[id={}, uri={}, timestamp={}] saved.",
+                savedEndpointHit.getId(),
+                savedEndpointHit.getUri(),
+                savedEndpointHit.getTimestamp());
         return EndpointHitMapper.toEndpointHitResponseDto(savedEndpointHit);
     }
 
     @Override
-    public List<ViewStatsResponseDto> getStats(LocalDateTime start, LocalDateTime end, List<String> uris,
-                                               Boolean unique, Integer from, Integer size) {
+    public List<ViewStatsResponseDto> getStats(
+            LocalDateTime start,
+            LocalDateTime end,
+            List<String> uris,
+            Boolean unique
+    ) {
         List<ViewStats> endpointHitsStats;
         if (unique == Boolean.TRUE) {
-            endpointHitsStats = endpointHitRepository.collectUniqueEndpointStats(start, end, uris,
-                    PageRequest.of(from, size, JpaSort.unsafe("COUNT(DISTINCT hits.ip)").descending()));
+            endpointHitsStats = endpointHitRepository.collectUniqueEndpointStats(
+                    start,
+                    end,
+                    uris,
+                    JpaSort.unsafe("COUNT(DISTINCT hits.ip)").descending());
         } else {
-            endpointHitsStats = endpointHitRepository.collectEndpointHitStats(start, end, uris,
-                    PageRequest.of(from, size, JpaSort.unsafe("COUNT(hits.ip)").descending()));
+            endpointHitsStats = endpointHitRepository.collectEndpointHitStats(
+                    start,
+                    end,
+                    uris,
+                    JpaSort.unsafe("COUNT(hits.ip)").descending());
         }
 
         List<ViewStatsResponseDto> endpointHitsStatsDto = ViewStatsMapper.toViewStatsResponseDto(endpointHitsStats);
-        log.debug("Возвращена статистика VIEW_STATS<DTO>[size={}, uri_count={}, unique_ip={}].",
+        log.debug("VIEW_STATS<DTO>[size={}, uri_count={}, unique_ip={}] returned.",
                 endpointHitsStatsDto.size(),
                 (uris != null) ? uris.size() : "ALL",
                 unique);

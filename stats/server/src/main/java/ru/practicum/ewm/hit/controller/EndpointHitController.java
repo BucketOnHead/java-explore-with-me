@@ -20,10 +20,13 @@ public class EndpointHitController {
 
     @PostMapping("/hit")
     @ResponseStatus(HttpStatus.CREATED)
-    public EndpointHitResponseDto addEndpointHit(@RequestBody AddEndpointHitRequestDto endpointHitDto) {
-        log.info("Запрос на сохранение просмотра: ENDPOINT_HIT<DTO>[URI='{}', IP={}].",
+    public EndpointHitResponseDto addEndpointHit(
+            @RequestBody AddEndpointHitRequestDto endpointHitDto
+    ) {
+        log.info("add ENDPOINT_HIT[uri='{}', ip={}, timestamp={}].",
                 endpointHitDto.getUri(),
-                endpointHitDto.getIp());
+                endpointHitDto.getIp(),
+                endpointHitDto.getTimestamp());
 
         return endpointHitService.addEndpointHit(endpointHitDto);
     }
@@ -33,13 +36,10 @@ public class EndpointHitController {
             @RequestParam LocalDateTime start,
             @RequestParam LocalDateTime end,
             @RequestParam(required = false) List<String> uris,
-            @RequestParam(defaultValue = "false") Boolean unique,
-            @RequestParam(defaultValue = "0") Integer from,
-            @RequestParam(defaultValue = "10") Integer size) {
-        log.info("Запрос статистики {}просмотров по {} uri-адресам.",
-                (unique == Boolean.TRUE) ? "уникальных " : "",
-                (uris != null) ? uris.size() : "всем");
-
-        return endpointHitService.getStats(start, end, uris, unique, from, size);
+            @RequestParam(defaultValue = "false") Boolean unique) {
+        log.info("get VIEW_STATS[uri_count={}, unique_ip={}].",
+                (uris != null) ? uris.size() : "ALL",
+                unique);
+        return endpointHitService.getStats(start, end, uris, unique);
     }
 }
