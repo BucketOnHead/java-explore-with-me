@@ -4,7 +4,9 @@ import lombok.experimental.UtilityClass;
 import org.slf4j.Logger;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.dto.response.EventShortResponseDto;
+import ru.practicum.ewm.entity.event.dto.response.comment.CommentResponseDto;
 import ru.practicum.ewm.entity.event.entity.Event;
+import ru.practicum.ewm.entity.event.entity.comment.Comment;
 import ru.practicum.ewm.entity.participation.dto.request.UpdateEventParticipationStatusRequestDto;
 import ru.practicum.ewm.entity.participation.dto.response.ParticipationResponseDto;
 
@@ -12,7 +14,7 @@ import java.util.List;
 
 @UtilityClass
 @SuppressWarnings("java:S1192")
-public final class EventServiceLoggingHelper {
+public final class EventServiceLoggerHelper {
 
     public static void eventSaved(
             Logger logger,
@@ -28,6 +30,22 @@ public final class EventServiceLoggingHelper {
                 event.getInitiator().getId(),
                 event.getTitle(),
                 event.getEventDate());
+    }
+
+    public static void commentSaved(
+            Logger logger,
+            Comment comment
+    ) {
+        logger.debug("COMMENT["
+                        + "id={}, "
+                        + "author_id={}, "
+                        + "event_id={}, "
+                        + "text='{}'"
+                        + "] saved.",
+                comment.getId(),
+                comment.getAuthor().getId(),
+                comment.getEvent().getId(),
+                comment.getText());
     }
 
     public static void eventDtoReturned(
@@ -155,5 +173,65 @@ public final class EventServiceLoggingHelper {
                         + "] updated.",
                 requestStatusDto.getRequestIds().size(),
                 requestStatusDto.getStatus());
+    }
+
+    public static void commentDtoReturned(
+            Logger logger,
+            CommentResponseDto commentDto
+    ) {
+        logger.debug("COMMENT<DTO>["
+                        + "comment_id={}, "
+                        + "author_id={}, "
+                        + "event_id={}, "
+                        + "text='{}'"
+                        + "] returned.",
+                commentDto.getId(),
+                commentDto.getAuthorId(),
+                commentDto.getEventId(),
+                commentDto.getText());
+    }
+
+    public static void commentDtoPageReturned(
+            Logger logger,
+            Integer from,
+            Integer size,
+            List<CommentResponseDto> commentDtos
+    ) {
+        logger.debug("COMMENT_PAGE<DTO>["
+                        + "from={}, "
+                        + "size={}, "
+                        + "comments_count={}"
+                        + "] returned.",
+                from,
+                size,
+                commentDtos.size());
+    }
+
+    public static void commentUpdated(
+            Logger logger,
+            Comment comment
+    ) {
+        logger.debug("COMMENT["
+                        + "comment_id={}, "
+                        + "updated_text='{}'"
+                        + "] updated.",
+                comment.getId(),
+                comment.getText());
+    }
+
+    public static void commentDeleted(
+            Logger logger,
+            Long comId,
+            Long userId,
+            Long eventId
+    ) {
+        logger.debug("COMMENT["
+                        + "comment_id={}, "
+                        + "author_id={}, "
+                        + "event_id={}"
+                        + "] deleted.",
+                comId,
+                userId,
+                eventId);
     }
 }

@@ -11,7 +11,7 @@ import ru.practicum.ewm.entity.category.repository.CategoryJpaRepository;
 import ru.practicum.ewm.entity.event.dto.request.UpdateEventAdminRequestDto;
 import ru.practicum.ewm.entity.event.dto.response.EventFullResponseDto;
 import ru.practicum.ewm.entity.event.entity.Event;
-import ru.practicum.ewm.entity.event.logging.EventServiceLoggingHelper;
+import ru.practicum.ewm.entity.event.logging.EventServiceLoggerHelper;
 import ru.practicum.ewm.entity.event.mapper.EventMapper;
 import ru.practicum.ewm.entity.event.repository.EventJpaRepository;
 import ru.practicum.ewm.entity.event.service.contoller.EventAdminService;
@@ -59,7 +59,7 @@ public class EventAdminServiceImpl implements EventAdminService {
                 eventStatisticsService.getEventViews(events, false),
                 requestRepository.getEventRequestsCount(events, Participation.Status.CONFIRMED));
         eventDtos.sort(Comparator.comparing(EventFullResponseDto::getId).reversed());
-        EventServiceLoggingHelper.eventDtoPageByAdminParametersReturned(log, from, size, eventDtos);
+        EventServiceLoggerHelper.eventDtoPageByAdminParametersReturned(log, from, size, eventDtos);
         return eventDtos;
     }
 
@@ -71,7 +71,7 @@ public class EventAdminServiceImpl implements EventAdminService {
         checkEventAdminUpdate(event, adminRequest.getStateAction());
         performActionIfExists(event, adminRequest.getStateAction());
         Event savedEvent = eventRepository.save(event);
-        EventServiceLoggingHelper.eventUpdatedByAdmin(log, savedEvent);
+        EventServiceLoggerHelper.eventUpdatedByAdmin(log, savedEvent);
         return EventMapper.toEventFullResponseDto(savedEvent, null, null);
     }
 
