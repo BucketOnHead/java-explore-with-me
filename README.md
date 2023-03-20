@@ -7,7 +7,16 @@
 
 ## Оглавление
 
+- [Технический стек](#технологический-стек)
 - [Архитектура проекта](#архитектура-проекта)
+
+## Технологический стек
+
+- Java 11
+- Spring Boot 2
+- ORM: Hibernate, Spring Data JPA
+- Apache Maven
+- Docker: dockerfile, docker-compose
 
 ## Архитектура проекта
 ![project architecture](./.readme/project_architecture.png)
